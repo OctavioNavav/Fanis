@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestro Rincón Especial 🤍</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #fcf8f6;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Contenedor tipo teléfono */
+    .app-container {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      min-height: 100vh;
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      overflow-y: auto;
+    }
+
+    /* --- VISTA 1: LOGIN --- */
+    #view-login {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: #ffffff;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .app-container.unlocked #view-login {
+      opacity: 0;
+      transform: translateY(-100%);
+      pointer-events: none;
+    }
+
+    .login-icon { font-size: 50px; margin-bottom: 15px; }
+    h2 { font-size: 22px; color: #2b2b2b; margin-bottom: 8px; text-align: center; }
+    p { font-size: 14px; color: #666; text-align: center; line-height: 1.5; }
+    
+    .question-box {
+      background: #fff5f5;
+      border: 1px solid #ffe3e3;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 20px 0;
+      width: 100%;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    input:focus { border-color: #e56b6f; }
+    .btn-main {
+      width: 100%;
+      padding: 14px;
+      background: #e56b6f;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .error-message {
+      color: #e63946;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* --- VISTA 2: CONTENIDO PRINCIPAL --- */
+    #view-content {
+      padding: 24px 20px;
+      opacity: 0;
+      transition: opacity 1s ease 0.5s;
+    }
+    .app-container.unlocked #view-content {
+      opacity: 1;
+    }
+
+    header { text-align: center; margin-bottom: 25px; }
+    header h1 { font-size: 24px; color: #b5838d; margin-bottom: 5px; }
+
+    /* Contador */
+    .counter-card {
+      background: linear-gradient(135deg, #ffb5a7, #fcd5ce);
+      color: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(255, 181, 167, 0.4);
+    }
+    .counter-card h3 { font-size: 15px; margin-bottom: 10px; font-weight: 500; }
+    .timer { font-size: 18px; font-weight: bold; letter-spacing: 1px; }
+
+    /* Secciones */
+    .section-title {
+      font-size: 18px;
+      color: #6d6875;
+      margin: 25px 0 15px 0;
+      border-bottom: 2px solid #f2e9e4;
+      padding-bottom: 5px;
+    }
+
+    /* Cartas desplegables */
+    .card-toggle {
+      background: #f8edeb;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .card-toggle summary {
+      font-weight: 600;
+      color: #b5838d;
+      outline: none;
+    }
+    .card-toggle p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #4a4e69;
+      text-align: left;
+    }
+
+    /* Galería */
+    .gallery {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    .gallery img {
+      width: 140px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    /* Cronología */
+    .timeline {
+      border-left: 2px solid #ffb5a7;
+      padding-left: 15px;
+      margin-left: 10px;
+    }
+    .timeline-item {
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '•';
+      color: #e56b6f;
+      font-size: 24px;
+      position: absolute;
+      left: -21px;
+      top: -5px;
+    }
+    .timeline-date { font-size: 12px; color: #999; font-weight: bold; }
+    .timeline-text { font-size: 14px; color: #444; }
+
+    /* Cupones */
+    .coupon {
+      border: 2px dashed #e56b6f;
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .coupon-info h4 { font-size: 15px; color: #e56b6f; }
+    .coupon-info p { font-size: 12px; color: #777; text-align: left; margin: 0; }
+    .btn-ws {
+      background: #25d366;
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container" id="app">
+
+    <!-- VISTA 1: LOGIN -->
+    <div id="view-login">
+      <div class="login-icon">🔒</div>
+      <h2>Acceso Privado Mi AMOR</h2>
+      <p>Responde la pregunta secreta para entrar a tu regalo:</p>
+      
+      <div class="question-box">
+        <p><strong>¿En qué lugar fue nuestro primer beso?</strong></p>
+      </div>
+
+      <input type="text" id="answer-input" placeholder="Escribe tu respuesta..." autocomplete="off">
+      <button class="btn-main" onclick="checkAnswer()">Entrar ✨</button>
+      <div class="error-message" id="error">Respuesta incorrecta, ¡inténtalo de nuevo! 💕</div>
+    </div>
+
+    <!-- VISTA 2: CONTENIDO PRINCIPAL -->
+    <div id="view-content">
+
+      <header>
+        <h1>Para mi persona favorita ❤️</h1>
+        <p>Un pequeño lugar hecho solo para ti mi Fanis</p>
+      </header>
+
+      <!-- Contador de tiempo -->
+      <div class="counter-card">
+        <h3>Llevamos juntos:</h3>
+        <div class="timer" id="timer">Cargando tiempo...</div>
+      </div>
+
+      <!-- Cartas desplegables -->
+      <h3 class="section-title">💌 Cartas para ti</h3>
+      <details class="card-toggle">
+  <summary>Toca aquí si me extrañas 💕</summary>
+  <p>Recuerda que aunque tengamos días ocupados, siempre estás presente en mi mente. ¡Mándame un mensaje ahora mismo para recordártelo!</p>
+</details>
+
+<details class="card-toggle">
+  <summary>Toca aquí si tuviste un día pesado ☀️</summary>
+  <p>Inhala profundo y exhala. Has hecho un gran trabajo hoy. Estoy orgulloso de ti y aquí estoy siempre para escucharte.</p>
+</details>
+
+<details class="card-toggle">
+  <summary>Toca aquí si necesitas un abrazo mío 🫂</summary>
+  <p>Cierra los ojos un segundo e imagina que te estoy abrazando súper fuerte. Sabes que siempre estoy aquí para ti, en las buenas y en las malas. Todo va a estar bien, mi amor, no estás sola en esto.</p>
+</details>
+
+<details class="card-toggle">
+  <summary>Toca aquí si te sientes insegura o triste 🌧️</summary>
+  <p>Eres la mujer más increíble, capaz y hermosa que conozco. Nunca dejes que un mal momento o un mal pensamiento te haga dudar de lo mucho que vales. Yo creo en ti y te admiro todos los días.</p>
+</details>
+
+<details class="card-toggle">
+  <summary>Toca aquí para recordar por qué te elegí 🤍</summary>
+  <p>Con todo lo que hemos vivido y aprendido juntos, te sigo eligiendo todos los días. Gracias por tu paciencia, por tu amor y por no soltarme de la mano. Estoy emocionado por todo lo que nos falta por construir.</p>
+</details>
+
+<details class="card-toggle">
+  <summary>Toca aquí si no sabes qué comer hoy 🍕</summary>
+  <p>¡Problema resuelto! Mándame un WhatsApp ahora mismo con un emoji de tu antojo (🍔, 🌮, 🍣, 🥗) y yo me encargo de invitarte o de que llegue hasta donde estés.</p>
+</details>
+
+<details class="card-toggle">
+  <summary>Toca aquí solo porque sí ✨</summary>
+  <p>No necesitas una razón para abrir esto, solo quería dejarte por escrito que me encantas, que me haces muy feliz y que me encanta verte sonreír. ¡Te amo!</p>
+</details>
+
+<details class="card-toggle">
+  <summary>Toca aquí si acabas de despertar ☀️</summary>
+  <p>¡Buenos días, preciosa! Espero que hoy tengas un día tan bonito como tú. Recuerda tomar agua, desayunar rico y que estoy pensando en ti desde mi primer café. ¡Éxito en todo hoy!</p>
+</details>
+      <!-- Cronología -->
+      <h3 class="section-title">⏳ Nuestra Historia</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">08 de Octubre</div>
+          <div class="timeline-text">El día que comenzó nuestro capítulo juntos.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Primer Viaje</div>
+          <div class="timeline-text">Nuestra primera escapada inolvidable.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Hoy</div>
+          <div class="timeline-text">Seguimos construyendo más recuerdos felices.</div>
+        </div>
+      </div>
+
+      <!-- Cupones Canjeables por WhatsApp -->
+      <h3 class="section-title">🎟️ Cupones Especiales</h3>
+
+<div class="coupon">
+  <div class="coupon-info">
+    <h4>Vale por una Cena 🍽️</h4>
+    <p>Tú eliges el lugar que quieras.</p>
+  </div>
+  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20una%20Cena%20%F0%9F%8D%BD" class="btn-ws" target="_blank">Canjear</a>
+</div>
+
+<div class="coupon">
+  <div class="coupon-info">
+    <h4>Vale por una ida a Six Flags 🎢</h4>
+    <p>A tu lado sé que estaré bien, no te preocupes por el miedo.</p>
+  </div>
+  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20una%20ida%20a%20Six%20Flags%20%F0%9F%8E%A2" class="btn-ws" target="_blank">Canjear</a>
+</div>
+
+<div class="coupon">
+  <div class="coupon-info">
+    <h4>Vale por una Salida al Cine 🍿</h4>
+    <p>Con palomitas y la película que tú elijas.</p>
+  </div>
+  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20una%20Salida%20al%20Cine%20%F0%9F%8F%BF" class="btn-ws" target="_blank">Canjear</a>
+</div>
+
+<div class="coupon">
+  <div class="coupon-info">
+    <h4>Vale por un Masaje Relajante 💆‍♀️</h4>
+    <p>Sesión de 30 minutos sin prisas ni interrupciones.</p>
+  </div>
+  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20un%20Masaje%20Relajante%20%F0%9F%92%86%E2%80%8D%E2%99%80%EF%B8%8F" class="btn-ws" target="_blank">Canjear</a>
+</div>
+
+<div class="coupon">
+  <div class="coupon-info">
+    <h4>Vale por Tarde de Postre y Café ☕🍰</h4>
+    <p>Salida tranquila a tu cafetería o postre favorito.</p>
+  </div>
+  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20Tarde%20de%20Postre%20y%20Caf%C3%A9%20%E2%98%95" class="btn-ws" target="_blank">Canjear</a>
+</div>
+
+<div class="coupon">
+  <div class="coupon-info">
+    <h4>Vale por un Abrazo Antiestrés 🫂</h4>
+    <p>Sin límite de tiempo para cuando necesites recargar energía.</p>
+  </div>
+  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20un%20Abrazo%20Antiestr%C3%A9s%20%F0%9F%A9%B2" class="btn-ws" target="_blank">Canjear</a>
+</div>
+
+<div class="coupon">
+  <div class="coupon-info">
+    <h4>Vale por un Día Sin Cocinar ni Lavar 🍕</h4>
+    <p>Pido comida a domicilio y yo me encargo de todo.</p>
+  </div>
+  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20un%20D%C3%ADa%20Sin%20Cocinar%20%F0%9F%8D%95" class="btn-ws" target="_blank">Canjear</a>
+</div>
+
+<div class="coupon">
+  <div class="coupon-info">
+    <h4>Vale por un Deseo Libre ✨</h4>
+    <p>Pide lo que quieras (dentro de lo legal y razonable).</p>
+  </div>
+  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20un%20Deseo%20Libre%20%E2%9C%A8" class="btn-ws" target="_blank">Canjear</a>
+</div>
+    </div>
+<!-- Botón Continuar / Cerrar -->
+      <div id="btn-continuar" style="text-align: center; margin: 40px 0 20px 0;">
+        <button type="button" onclick="cerrarVentana()" class="btn-main" style="width: 100%; cursor: pointer;">
+          Continuar ✨
+        </button>
+      </div>
+
+    </div> <!-- Cierre de #view-content -->
+  </div>
+
+  <script>
+    // 1. VALIDACIÓN DEL LOGIN
+    function checkAnswer() {
+      const input = document.getElementById('answer-input').value.trim().toLowerCase();
+      const errorMsg = document.getElementById('error');
+      const app = document.getElementById('app');
+      const music = document.getElementById('bg-music');
+
+      // Cambia esta palabra por tu respuesta correcta en minúsculas
+      const respuestaCorrecta = "delao";
+
+      if (input === respuestaCorrecta) {
+        errorMsg.style.display = "none";
+        app.classList.add('unlocked');
+        
+        // Iniciar música si existe archivo
+        music.play().catch(() => console.log("Audio autostart bloqueado por el navegador"));
+      } else {
+        errorMsg.style.display = "block";
+      }
+    }
+
+    // 2. CONTADOR DE TIEMPO EN TIEMPO REAL
+    // Ajusta la fecha de inicio aquí: Año, Mes (0 = Enero, 11 = Diciembre), Día
+    const startDate = new Date(2022, 10, 08); // Ejemplo: 10 de Agosto de 2022
+
+    function updateTimer() {
+      const now = new Date();
+      const diff = now - startDate;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('timer').innerText = 
+        `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+  </script>
+  
+
+</body>
+</html>
