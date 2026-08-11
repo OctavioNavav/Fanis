@@ -3,427 +3,338 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nuestro Rincón Especial 🤍</title>
+  <title>Para el amor de mi vida FANIS💕</title>
   <style>
     * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
     body {
-      background-color: #fcf8f6;
-      color: #333;
+      background-color: #f5e8dc;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      color: #5c4033;
+      overflow-x: hidden;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
     }
 
-    /* Contenedor tipo teléfono */
-    .app-container {
+    #main-wrapper {
       position: relative;
       width: 100%;
-      max-width: 420px;
-      min-height: 100vh;
-      background: #ffffff;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      overflow-y: auto;
-    }
-
-    /* --- VISTA 1: LOGIN --- */
-    #view-login {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+      max-width: 1000px;
       height: 100vh;
-      background: #ffffff;
-      z-index: 100;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
-      padding: 30px;
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      overflow: hidden;
     }
-    .app-container.unlocked #view-login {
+
+    /* Panel del mensaje e historia */
+    #text-panel {
+      width: 45%;
+      max-width: 420px;
       opacity: 0;
-      transform: translateY(-100%);
-      pointer-events: none;
-    }
-
-    .login-icon { font-size: 50px; margin-bottom: 15px; }
-    h2 { font-size: 22px; color: #2b2b2b; margin-bottom: 8px; text-align: center; }
-    p { font-size: 14px; color: #666; text-align: center; line-height: 1.5; }
-    
-    .question-box {
-      background: #fff5f5;
-      border: 1px solid #ffe3e3;
-      padding: 15px;
-      border-radius: 12px;
-      margin: 20px 0;
-      width: 100%;
-      text-align: center;
-    }
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
-      font-size: 15px;
-      outline: none;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    input:focus { border-color: #e56b6f; }
-    .btn-main {
-      width: 100%;
-      padding: 14px;
-      background: #e56b6f;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .error-message {
-      color: #e63946;
-      font-size: 13px;
-      margin-top: 10px;
-      display: none;
-    }
-
-    /* --- VISTA 2: CONTENIDO PRINCIPAL --- */
-    #view-content {
-      padding: 24px 20px;
-      opacity: 0;
-      transition: opacity 1s ease 0.5s;
-    }
-    .app-container.unlocked #view-content {
-      opacity: 1;
-    }
-
-    header { text-align: center; margin-bottom: 25px; }
-    header h1 { font-size: 24px; color: #b5838d; margin-bottom: 5px; }
-
-    /* Contador */
-    .counter-card {
-      background: linear-gradient(135deg, #ffb5a7, #fcd5ce);
-      color: #fff;
+      transform: translateX(-30px);
+      transition: opacity 1.8s ease, transform 1.8s ease;
+      z-index: 10;
       padding: 20px;
-      border-radius: 16px;
-      text-align: center;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 15px rgba(255, 181, 167, 0.4);
-    }
-    .counter-card h3 { font-size: 15px; margin-bottom: 10px; font-weight: 500; }
-    .timer { font-size: 18px; font-weight: bold; letter-spacing: 1px; }
-
-    /* Secciones */
-    .section-title {
-      font-size: 18px;
-      color: #6d6875;
-      margin: 25px 0 15px 0;
-      border-bottom: 2px solid #f2e9e4;
-      padding-bottom: 5px;
-    }
-
-    /* Cartas desplegables */
-    .card-toggle {
-      background: #f8edeb;
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .card-toggle summary {
-      font-weight: 600;
-      color: #b5838d;
-      outline: none;
-    }
-    .card-toggle p {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #4a4e69;
       text-align: left;
     }
 
-    /* Galería */
-    .gallery {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-    }
-    .gallery img {
-      width: 140px;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 12px;
-      flex-shrink: 0;
+    #text-panel.show {
+      opacity: 1;
+      transform: translateX(0);
     }
 
-    /* Cronología */
-    .timeline {
-      border-left: 2px solid #ffb5a7;
-      padding-left: 15px;
-      margin-left: 10px;
-    }
-    .timeline-item {
-      margin-bottom: 15px;
-      position: relative;
-    }
-    .timeline-item::before {
-      content: '•';
-      color: #e56b6f;
-      font-size: 24px;
-      position: absolute;
-      left: -21px;
-      top: -5px;
-    }
-    .timeline-date { font-size: 12px; color: #999; font-weight: bold; }
-    .timeline-text { font-size: 14px; color: #444; }
-
-    /* Cupones */
-    .coupon {
-      border: 2px dashed #e56b6f;
-      background: #fff;
-      padding: 15px;
-      border-radius: 12px;
+    h1 {
+      font-size: 1.4rem;
       margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      color: #8b3a3a;
+      font-weight: normal;
     }
-    .coupon-info h4 { font-size: 15px; color: #e56b6f; }
-    .coupon-info p { font-size: 12px; color: #777; text-align: left; margin: 0; }
-    .btn-ws {
-      background: #25d366;
-      color: white;
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 12px;
+
+    p.poem {
+      font-size: 0.98rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      color: #4a3328;
+    }
+
+    .counter-label {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: #7a5242;
+    }
+
+    #counter {
+      font-size: 1.05rem;
       font-weight: bold;
-      white-space: nowrap;
+      color: #b22222;
+      line-height: 1.7;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px dashed rgba(178, 34, 34, 0.35);
+      display: inline-block;
+      width: 100%;
+    }
+
+    .unit {
+      font-weight: normal;
+      font-size: 0.85rem;
+      color: #5c4033;
+      margin-right: 4px;
+    }
+
+    /* Contenedor del árbol */
+    #tree-stage {
+      width: 500px;
+      height: 600px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: left 2s cubic-bezier(0.25, 1, 0.5, 1), transform 2s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 5;
+    }
+
+    /* Animación: El árbol rueda/se desplaza hacia la derecha */
+    #tree-stage.shift-right {
+      left: 70%;
+      transform: translateX(-50%) scale(0.95);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Ajuste para pantallas móviles */
+    @media (max-width: 768px) {
+      #main-wrapper {
+        flex-direction: column-reverse;
+        justify-content: flex-end;
+        padding-top: 10px;
+      }
+
+      #tree-stage {
+        position: relative;
+        left: 0 !important;
+        transform: none !important;
+        width: 320px;
+        height: 380px;
+        margin-top: -30px;
+        transition: transform 1.5s ease;
+      }
+
+      #tree-stage.shift-right {
+        transform: translateY(0) scale(0.9) !important;
+      }
+
+      #text-panel {
+        width: 90%;
+        max-width: 100%;
+        text-align: center;
+        padding: 10px;
+        transform: translateY(20px);
+      }
+
+      #text-panel.show {
+        transform: translateY(0);
+      }
+    }
+
+    /* Corazones cayendo */
+    .falling-heart {
+      position: absolute;
+      pointer-events: none;
+      z-index: 20;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-20px) rotate(0deg) scale(0.8);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg) scale(1.2);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="app-container" id="app">
+<div id="main-wrapper">
+  <!-- Panel de Texto (Aparecerá a la izquierda) -->
+  <div id="text-panel">
+    <h1>Para el amor de mi vida:</h1>
+    <p class="poem">
+      Mi vida hermosa mi fanis chula, gracias por hacerme el hombre mas feliz del mundo, te amo con toda mi alma 💕
+    </p>
+    <div class="counter-label">Nuestro viaje juntos comenzó hace...</div>
+    <div id="counter">Cargando tiempo juntos...</div>
+  </div>
 
-    <!-- VISTA 1: LOGIN -->
-    <div id="view-login">
-      <div class="login-icon">🔒</div>
-      <h2>Acceso Privado Mi AMOR</h2>
-      <p>Responde la pregunta secreta para entrar a tu regalo:</p>
+  <!-- Escenario del Árbol (Inicia centrado y se desplaza a la derecha) -->
+  <div id="tree-stage">
+    <canvas id="treeCanvas" width="500" height="600"></canvas>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('treeCanvas');
+  const ctx = canvas.getContext('2d');
+  const treeStage = document.getElementById('tree-stage');
+  const textPanel = document.getElementById('text-panel');
+
+  // Fecha de inicio: 8 de octubre de 2022
+  const startDate = new Date('2022-10-08T00:00:00');
+
+  // Dibuja corazones individuales en el canvas
+  function drawHeart(x, y, size, color) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.translate(x, y);
+    ctx.scale(size / 10, size / 10);
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(-5, -5, -10, 0, -10, 5);
+    ctx.bezierCurveTo(-10, 10, 0, 15, 0, 20);
+    ctx.bezierCurveTo(0, 15, 10, 10, 10, 5);
+    ctx.bezierCurveTo(10, 0, 5, -5, 0, 0);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Tronco y ramas
+  function drawTrunk() {
+    ctx.lineWidth = 12;
+    ctx.strokeStyle = '#5c4033';
+    ctx.lineCap = 'round';
+
+    // Tronco principal
+    ctx.beginPath();
+    ctx.moveTo(250, 580);
+    ctx.bezierCurveTo(250, 480, 240, 420, 250, 350);
+    ctx.stroke();
+
+    // Ramas
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(250, 400);
+    ctx.bezierCurveTo(220, 360, 180, 340, 150, 310);
+    ctx.moveTo(250, 380);
+    ctx.bezierCurveTo(280, 340, 320, 320, 350, 290);
+    ctx.moveTo(250, 360);
+    ctx.bezierCurveTo(240, 310, 250, 280, 250, 240);
+    ctx.stroke();
+  }
+
+  // Generación de copa de corazones
+  const hearts = [];
+  const colors = ['#ff4d6d', '#ff758f', '#ff8fa3', '#ffb3c1', '#ff0054', '#fb6f92', '#ffe5ec'];
+
+  function createBloom() {
+    const totalHearts = 360;
+    for (let i = 0; i < totalHearts; i++) {
+      const t = Math.random() * Math.PI * 2;
+      const r = Math.sqrt(Math.random()); 
       
-      <div class="question-box">
-        <p><strong>¿En qué lugar fue nuestro primer beso?</strong></p>
-      </div>
+      let hx = 16 * Math.pow(Math.sin(t), 3);
+      let hy = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
 
-      <input type="text" id="answer-input" placeholder="Escribe tu respuesta..." autocomplete="off">
-      <button class="btn-main" onclick="checkAnswer()">Entrar ✨</button>
-      <div class="error-message" id="error">Respuesta incorrecta, ¡inténtalo de nuevo! 💕</div>
-    </div>
+      hx *= r * 11;
+      hy *= r * 11;
 
-    <!-- VISTA 2: CONTENIDO PRINCIPAL -->
-    <div id="view-content">
+      hearts.push({
+        x: 250 + hx,
+        y: 220 + hy,
+        size: Math.random() * 8 + 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        delay: Math.random() * 2200,
+        currentSize: 0
+      });
+    }
+  }
 
-      <header>
-        <h1>Para mi persona favorita ❤️</h1>
-        <p>Un pequeño lugar hecho solo para ti mi Fanis</p>
-      </header>
+  // Animación del brote
+  let startTime = null;
+  function animateTree(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const progress = timestamp - startTime;
 
-      <!-- Contador de tiempo -->
-      <div class="counter-card">
-        <h3>Llevamos juntos:</h3>
-        <div class="timer" id="timer">Cargando tiempo...</div>
-      </div>
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawTrunk();
 
-      <!-- Cartas desplegables -->
-      <h3 class="section-title">💌 Cartas para ti</h3>
-      <details class="card-toggle">
-  <summary>Toca aquí si me extrañas 💕</summary>
-  <p>Recuerda que aunque tengamos días ocupados, siempre estás presente en mi mente. ¡Mándame un mensaje ahora mismo para recordártelo!</p>
-</details>
-
-<details class="card-toggle">
-  <summary>Toca aquí si tuviste un día pesado ☀️</summary>
-  <p>Inhala profundo y exhala. Has hecho un gran trabajo hoy. Estoy orgulloso de ti y aquí estoy siempre para escucharte.</p>
-</details>
-
-<details class="card-toggle">
-  <summary>Toca aquí si necesitas un abrazo mío 🫂</summary>
-  <p>Cierra los ojos un segundo e imagina que te estoy abrazando súper fuerte. Sabes que siempre estoy aquí para ti, en las buenas y en las malas. Todo va a estar bien, mi amor, no estás sola en esto.</p>
-</details>
-
-<details class="card-toggle">
-  <summary>Toca aquí si te sientes insegura o triste 🌧️</summary>
-  <p>Eres la mujer más increíble, capaz y hermosa que conozco. Nunca dejes que un mal momento o un mal pensamiento te haga dudar de lo mucho que vales. Yo creo en ti y te admiro todos los días.</p>
-</details>
-
-<details class="card-toggle">
-  <summary>Toca aquí para recordar por qué te elegí 🤍</summary>
-  <p>Con todo lo que hemos vivido y aprendido juntos, te sigo eligiendo todos los días. Gracias por tu paciencia, por tu amor y por no soltarme de la mano. Estoy emocionado por todo lo que nos falta por construir.</p>
-</details>
-
-<details class="card-toggle">
-  <summary>Toca aquí si no sabes qué comer hoy 🍕</summary>
-  <p>¡Problema resuelto! Mándame un WhatsApp ahora mismo con un emoji de tu antojo (🍔, 🌮, 🍣, 🥗) y yo me encargo de invitarte o de que llegue hasta donde estés.</p>
-</details>
-
-<details class="card-toggle">
-  <summary>Toca aquí solo porque sí ✨</summary>
-  <p>No necesitas una razón para abrir esto, solo quería dejarte por escrito que me encantas, que me haces muy feliz y que me encanta verte sonreír. ¡Te amo!</p>
-</details>
-
-<details class="card-toggle">
-  <summary>Toca aquí si acabas de despertar ☀️</summary>
-  <p>¡Buenos días, preciosa! Espero que hoy tengas un día tan bonito como tú. Recuerda tomar agua, desayunar rico y que estoy pensando en ti desde mi primer café. ¡Éxito en todo hoy!</p>
-</details>
-      <!-- Cronología -->
-      <h3 class="section-title">⏳ Nuestra Historia</h3>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-date">08 de Octubre</div>
-          <div class="timeline-text">El día que comenzó nuestro capítulo juntos.</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-date">Primer Viaje</div>
-          <div class="timeline-text">Nuestra primera escapada inolvidable.</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-date">Hoy</div>
-          <div class="timeline-text">Seguimos construyendo más recuerdos felices.</div>
-        </div>
-      </div>
-
-      <!-- Cupones Canjeables por WhatsApp -->
-      <h3 class="section-title">🎟️ Cupones Especiales</h3>
-
-<div class="coupon">
-  <div class="coupon-info">
-    <h4>Vale por una Cena 🍽️</h4>
-    <p>Tú eliges el lugar que quieras.</p>
-  </div>
-  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20una%20Cena%20%F0%9F%8D%BD" class="btn-ws" target="_blank">Canjear</a>
-</div>
-
-<div class="coupon">
-  <div class="coupon-info">
-    <h4>Vale por una ida a Six Flags 🎢</h4>
-    <p>A tu lado sé que estaré bien, no te preocupes por el miedo.</p>
-  </div>
-  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20una%20ida%20a%20Six%20Flags%20%F0%9F%8E%A2" class="btn-ws" target="_blank">Canjear</a>
-</div>
-
-<div class="coupon">
-  <div class="coupon-info">
-    <h4>Vale por una Salida al Cine 🍿</h4>
-    <p>Con palomitas y la película que tú elijas.</p>
-  </div>
-  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20una%20Salida%20al%20Cine%20%F0%9F%8F%BF" class="btn-ws" target="_blank">Canjear</a>
-</div>
-
-<div class="coupon">
-  <div class="coupon-info">
-    <h4>Vale por un Masaje Relajante 💆‍♀️</h4>
-    <p>Sesión de 30 minutos sin prisas ni interrupciones.</p>
-  </div>
-  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20un%20Masaje%20Relajante%20%F0%9F%92%86%E2%80%8D%E2%99%80%EF%B8%8F" class="btn-ws" target="_blank">Canjear</a>
-</div>
-
-<div class="coupon">
-  <div class="coupon-info">
-    <h4>Vale por Tarde de Postre y Café ☕🍰</h4>
-    <p>Salida tranquila a tu cafetería o postre favorito.</p>
-  </div>
-  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20Tarde%20de%20Postre%20y%20Caf%C3%A9%20%E2%98%95" class="btn-ws" target="_blank">Canjear</a>
-</div>
-
-<div class="coupon">
-  <div class="coupon-info">
-    <h4>Vale por un Abrazo Antiestrés 🫂</h4>
-    <p>Sin límite de tiempo para cuando necesites recargar energía.</p>
-  </div>
-  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20un%20Abrazo%20Antiestr%C3%A9s%20%F0%9F%A9%B2" class="btn-ws" target="_blank">Canjear</a>
-</div>
-
-<div class="coupon">
-  <div class="coupon-info">
-    <h4>Vale por un Día Sin Cocinar ni Lavar 🍕</h4>
-    <p>Pido comida a domicilio y yo me encargo de todo.</p>
-  </div>
-  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20un%20D%C3%ADa%20Sin%20Cocinar%20%F0%9F%8D%95" class="btn-ws" target="_blank">Canjear</a>
-</div>
-
-<div class="coupon">
-  <div class="coupon-info">
-    <h4>Vale por un Deseo Libre ✨</h4>
-    <p>Pide lo que quieras (dentro de lo legal y razonable).</p>
-  </div>
-  <a href="https://wa.me/525584926131?text=%C2%A1Hola!%20Quiero%20canjear%20mi%20cup%C3%B3n%20de:%20Vale%20por%20un%20Deseo%20Libre%20%E2%9C%A8" class="btn-ws" target="_blank">Canjear</a>
-</div>
-    </div>
-<!-- Botón Continuar / Cerrar -->
-      <div id="btn-continuar" style="text-align: center; margin: 40px 0 20px 0;">
-        <button type="button" onclick="cerrarVentana()" class="btn-main" style="width: 100%; cursor: pointer;">
-          Continuar ✨
-        </button>
-      </div>
-
-    </div> <!-- Cierre de #view-content -->
-  </div>
-
-  <script>
-    // 1. VALIDACIÓN DEL LOGIN
-    function checkAnswer() {
-      const input = document.getElementById('answer-input').value.trim().toLowerCase();
-      const errorMsg = document.getElementById('error');
-      const app = document.getElementById('app');
-      const music = document.getElementById('bg-music');
-
-      // Cambia esta palabra por tu respuesta correcta en minúsculas
-      const respuestaCorrecta = "delao";
-
-      if (input === respuestaCorrecta) {
-        errorMsg.style.display = "none";
-        app.classList.add('unlocked');
-        
-        // Iniciar música si existe archivo
-        music.play().catch(() => console.log("Audio autostart bloqueado por el navegador"));
-      } else {
-        errorMsg.style.display = "block";
+    let bloomedCount = 0;
+    hearts.forEach(h => {
+      if (progress > h.delay) {
+        if (h.currentSize < h.size) {
+          h.currentSize += 0.4;
+        }
+        drawHeart(h.x, h.y, h.currentSize, h.color);
+        bloomedCount++;
       }
+    });
+
+    if (bloomedCount < hearts.length || progress < 2500) {
+      requestAnimationFrame(animateTree);
+    } else {
+      // Al terminar de florecer, desplaza el árbol a la derecha e ingresa el texto
+      setTimeout(() => {
+        treeStage.classList.add('shift-right');
+        setTimeout(() => {
+          textPanel.classList.add('show');
+          startFallingHearts();
+        }, 800);
+      }, 400);
     }
+  }
 
-    // 2. CONTADOR DE TIEMPO EN TIEMPO REAL
-    // Ajusta la fecha de inicio aquí: Año, Mes (0 = Enero, 11 = Diciembre), Día
-    const startDate = new Date(2022, 10, 08); // Ejemplo: 10 de Agosto de 2022
+  // Lluvia suave de corazones
+  function startFallingHearts() {
+    setInterval(() => {
+      const heart = document.createElement('div');
+      heart.className = 'falling-heart';
+      heart.innerText = ['🌸', '💖', '💕', '✨', '🌺'][Math.floor(Math.random() * 5)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+      heart.style.fontSize = (Math.random() * 10 + 12) + 'px';
+      document.body.appendChild(heart);
 
-    function updateTimer() {
-      const now = new Date();
-      const diff = now - startDate;
+      setTimeout(() => heart.remove(), 7000);
+    }, 450);
+  }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / 1000 / 60) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
+  // Contador en tiempo real
+  function updateCounter() {
+    const now = new Date();
+    const diff = now - startDate;
 
-      document.getElementById('timer').innerText = 
-        `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
 
-    setInterval(updateTimer, 1000);
-    updateTimer();
-  </script>
-  
+    document.getElementById('counter').innerHTML = `
+      ${days} <span class="unit">días</span> 
+      ${hours} <span class="unit">horas</span> 
+      ${minutes} <span class="unit">minutos</span> 
+      ${seconds} <span class="unit">segundos</span>
+    `;
+  }
+
+  // Ejecución
+  createBloom();
+  requestAnimationFrame(animateTree);
+  setInterval(updateCounter, 1000);
+  updateCounter();
+</script>
 
 </body>
 </html>
