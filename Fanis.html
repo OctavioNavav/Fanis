@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galaxia de Amor ✨</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #05050f;
+      color: #fff;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: none;
+    }
+    #galaxy-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      perspective: 1000px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: grab;
+    }
+    #galaxy-container:active {
+      cursor: grabbing;
+    }
+    .word {
+      position: absolute;
+      font-weight: bold;
+      white-space: nowrap;
+      user-select: none;
+      transition: color 0.3s, transform 0.2s;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+    }
+    /* Estrellas de fondo */
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: blink 2s infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes blink {
+      from { opacity: 0.2; }
+      to { opacity: 0.8; }
+    }
+    /* Mensaje flotante cuando toca una palabra */
+    #message-box {
+      position: absolute;
+      bottom: 40px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 118, 117, 0.4);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out, transform 0.3s;
+      transform: translateY(10px);
+      z-index: 1000;
+    }
+    #message-box.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Corazones al tocar */
+    .floating-heart {
+      position: absolute;
+      font-size: 24px;
+      pointer-events: none;
+      animation: floatUp 1.2s forwards ease-out;
+      z-index: 999;
+    }
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -120px) scale(1.4);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="galaxy-container"></div>
+<div id="message-box">Toca las palabras para descubrir mensajes ✨</div>
+
+<script>
+  const wordsList = [
+    "Mi amor 💕", "Te amo ❤️", "Mi vida ✨", "Princesa 👑",
+    "Preciosa 🌸", "Mi cielo 🌌", "Hermosa 💖", "Siempre juntos 🤍",
+    "Mi lugar seguro 🫂", "Eres mi todo 💫", "Mi sol ☀️", "Te adoro ✨",
+    "Mi persona favorita 💍", "Universo 🪐", "Mi reina 👸", "Amor mío 💌",
+    "Sonrisa hermosa 😊", "Mi compañera 🤝", "Infinito ♾️", "Mi suerte 🍀"
+  ];
+
+  const container = document.getElementById('galaxy-container');
+  const messageBox = document.getElementById('message-box');
+  const totalWords = 60;
+  const elements = [];
+  const radius = Math.min(window.innerWidth, window.innerHeight) * 0.35;
+  
+  let rotationX = 0;
+  let rotationY = 0;
+  let velocityX = 0.002;
+  let velocityY = 0.002;
+
+  // Fondo de estrellas
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2 + 1;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.left = `${Math.random() * 100}vw`;
+    star.style.top = `${Math.random() * 100}vh`;
+    star.style.animationDelay = `${Math.random() * 2}s`;
+    document.body.appendChild(star);
+  }
+
+  // Distribución 3D
+  const phi = Math.PI * (3 - Math.sqrt(5));
+
+  for (let i = 0; i < totalWords; i++) {
+    const y = 1 - (i / (totalWords - 1)) * 2;
+    const radiusAtY = Math.sqrt(1 - y * y);
+    const theta = phi * i;
+
+    const x = Math.cos(theta) * radiusAtY;
+    const z = Math.sin(theta) * radiusAtY;
+
+    const el = document.createElement('div');
+    el.className = 'word';
+    const text = wordsList[i % wordsList.length];
+    el.innerText = text;
+    
+    const colors = ['#ff7675', '#fd79a8', '#a29bfe', '#ffeaa7', '#ffffff', '#74b9ff'];
+    el.style.color = colors[Math.floor(Math.random() * colors.length)];
+    el.style.fontSize = `${Math.floor(Math.random() * 6 + 14)}px`;
+
+    // INTERACCIÓN AL TOCAR UNA PALABRA
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showMessage(`✨ ${text} ✨`);
+      createHeart(e.clientX, e.clientY);
+    });
+
+    container.appendChild(el);
+    elements.push({ el, x: x * radius, y: y * radius, z: z * radius });
+  }
+
+  // Bucle de animación 3D
+  function animate() {
+    rotationX += velocityX;
+    rotationY += velocityY;
+
+    const cosX = Math.cos(rotationX);
+    const sinX = Math.sin(rotationX);
+    const cosY = Math.cos(rotationY);
+    const sinY = Math.sin(rotationY);
+
+    elements.forEach(item => {
+      let x1 = item.x * cosY - item.z * sinY;
+      let z1 = item.z * cosY + item.x * sinY;
+
+      let y1 = item.y * cosX - z1 * sinX;
+      let z2 = z1 * cosX + item.y * sinX;
+
+      const scale = (z2 + radius * 2) / (radius * 2);
+      const alpha = (z2 + radius) / (radius * 2);
+
+      item.el.style.transform = `translate3d(${x1}px, ${y1}px, ${z2}px) scale(${Math.max(0.4, scale)})`;
+      item.el.style.opacity = Math.max(0.1, alpha);
+      item.el.style.zIndex = Math.floor(z2);
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  // Arrastrar y girar con el dedo o ratón
+  let isDragging = false;
+  let previousPosition = { x: 0, y: 0 };
+
+  const startDrag = (e) => {
+    isDragging = true;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    previousPosition = { x: clientX, y: clientY };
+  };
+
+  const moveDrag = (e) => {
+    if (!isDragging) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const deltaX = clientX - previousPosition.x;
+    const deltaY = clientY - previousPosition.y;
+
+    velocityY = deltaX * 0.0004;
+    velocityX = -deltaY * 0.0004;
+
+    previousPosition = { x: clientX, y: clientY };
+  };
+
+  const endDrag = () => { isDragging = false; };
+
+  window.addEventListener('mousedown', startDrag);
+  window.addEventListener('mousemove', moveDrag);
+  window.addEventListener('mouseup', endDrag);
+
+  window.addEventListener('touchstart', startDrag);
+  window.addEventListener('touchmove', moveDrag);
+  window.addEventListener('touchend', endDrag);
+
+  // EFECTO DE CORAZONES AL TOCAR LA PANTALLA
+  window.addEventListener('click', (e) => {
+    createHeart(e.clientX, e.clientY);
+  });
+
+  function createHeart(x, y) {
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    const icons = ['💖', '💕', '✨', '🌸', '🤍', '💗'];
+    heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+    heart.style.left = `${x}px`;
+    heart.style.top = `${y}px`;
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 1200);
+  }
+
+  // Mostrar mensaje emergente
+  let messageTimeout;
+  function showMessage(text) {
+    messageBox.innerText = text;
+    messageBox.classList.add('show');
+
+    clearTimeout(messageTimeout);
+    messageTimeout = setTimeout(() => {
+      messageBox.classList.remove('show');
+    }, 2500);
+  }
+</script>
+
+</body>
+</html>
